@@ -1,0 +1,264 @@
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+  integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<link rel="stylesheet" href="../css/home.css">
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+  body {
+    background-color: #eee
+  }
+
+  .time {
+    font-size: 9px !important
+  }
+
+  .socials i {
+    margin-right: 14px;
+    font-size: 17px;
+    color: #d2c8c8;
+    cursor: pointer
+  }
+
+  .feed-image img {
+    width: 100%;
+    height: auto
+  }
+</style>
+
+<body>
+
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+  <script rel="javascript" type="text/javascript" href="js/jquery-1.11.3.min.js"></script>
+  <script src="https://ajax.aspnetCDN.com/ajax/jQuery/jQuery-1.9.0.min.js"></script>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+    integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+
+  <div class="elements" id="elements">
+
+    <div>
+      <br><br>
+      <h2>Hi {{userdata.name}}, Welcome to home page</h2>
+    </div>
+
+
+
+    {{#each displayarticle}}
+    <div class="container px-1 mt-4 mb-4">
+      <div class="d-flex justify-content-center row">
+        <div class="col-md-8">
+          <div class="feed p-2">
+            <!-- <div class="d-flex flex-row justify-content-between align-items-center p-2 bg-white border">
+                        <div class="feed-text px-2">
+                            <h6 class="text-black-50 mt-2">What's on your mind</h6>
+                        </div>
+                        <div class="feed-icon px-2"><i class="fa fa-long-arrow-up text-black-50"></i></div>
+                    </div> -->
+            <div class="bg-white border mt-2">
+              <div>
+                <div class="d-flex flex-row justify-content-between align-items-center p-2 border-bottom">
+                  <div class="d-flex flex-row align-items-center feed-text px-2"><img class="rounded-circle"
+                      src="{{this.image}}" width="45">
+                    <div class="d-flex flex-column flex-wrap ml-2"><span
+                        class="font-weight-bold">{{this.username}}</span><span class="text-black-50 time">40 minutes
+                        ago</span></div>
+                  </div>
+                  <div class="feed-icon px-2"><i class="fa fa-ellipsis-v text-black-50"></i></div>
+                </div>
+              </div>
+              <h6 class="p-2 px-3">{{this.title}}</h6>
+              <div class="p-1 px-3"><span>{{this.description}}</span></div>
+              <hr style="width: 95%;">
+              <div class="p-1 px-3" style="color: rgb(48, 49, 49);"><span>{{this.content}}</span></div>
+
+              <div>
+                <div class="d-flex flex-row justify-content-between align-items-center p-2 border-bottom">
+                  <div class="d-flex flex-row align-items-center socials feed-text px-2">
+                    <i class="fa fa-star" onclick="countincrement('{{this.premiumcount}}','{{this.articleuserid}}')"
+                      id="rating" aria-hidden="true"></i>
+                  </div>
+
+
+                  <div class="d-flex socials p-2 py-3">
+                    <script type="text/javascript">
+                        var article_id = "{{this.articleid}}"
+                        window.onload = function(){
+                          likeCount(article_id);
+                        }
+                    </script>
+                    <span style="cursor: pointer;"  class="badge badge-light">{{this.likeCount}}</span>&nbsp;
+                    <i class="fa fa-thumbs-up"
+                      onclick="likeIncrement('{{this.articleuserid}}','{{this.articleid}}')"></i>
+                    <span style="cursor: pointer;" class="badge badge-light">4</span>&nbsp;
+                    <i class="fa fa-comments-o" onclick="checkPremium()"></i>
+                    <span style="cursor: pointer;" class="badge badge-light">4</span>&nbsp;
+                    <i class="fa fa-share" onclick="checkPremium()"></i>
+
+                  </div>
+
+                </div>
+                <div style="display: flex; justify-content: center;">
+                  <span id="premium" style="color: rgb(213, 160, 61); "></span>
+                </div>
+
+              </div>
+
+              <div>
+
+
+
+              </div>
+
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+    {{/each}}
+
+  </div>
+
+
+  <script>
+    function checkPremium() {
+      var premium = "{{userdata.premium}}";
+      console.log(premium)
+      if (premium != 1) {
+        document.getElementById("premium").innerHTML = "Sorry, you are not a premium user";
+      } else {
+        document.getElementById("premium").innerHTML = "You are a premium user";
+      }
+    }
+  </script>
+
+  <script>
+
+    var loginuserid = "{{userdata._id}}";
+
+    function countincrement(premiumcount, articleuserid) {
+      console.log(premiumcount, articleuserid)
+      //$("rating").click(function (e) {
+      //e.preventDefault();
+
+
+      $(document).ready(function () {
+        var premiumcount1 = parseInt(premiumcount);
+        var articleuserid1 = articleuserid;
+        var count = premiumcount1 + 1;
+
+        $.ajax({
+          type: "POST",
+          url: "/userdashboard",
+          data: {
+            premiumcount: count, // < note use of 'this' here
+            loginuserid: loginuserid,
+            articleuserid: articleuserid1
+
+            //access_token: $("#access_token").val() ......////$(this).val()
+          },
+          dataType: 'json',
+          success: function (result) {
+            alert('ok');
+          },
+          error: function (result) {
+            console.log(result)
+            alert('error');
+          }
+        })
+      })
+    }//);
+
+    // for like button
+
+    var like_count;
+    function likeCount(articleID){
+      var articleid1 = articleID;
+      console.log(articleid1)
+      $.ajax({
+          type: "POST",
+          url: "userdashboard/likecount",
+          data: {
+            
+            articleid: articleid1,
+
+            //access_token: $("#access_token").val() ......////$(this).val()
+          },
+          dataType: 'json',
+          success: function (result) {
+            console.log("Success");
+            console.log(result);
+            //alert('ok');
+          },
+          error: function (result) {
+            alert('error');
+          }
+        })
+    }
+
+    function likeIncrement(articleuserid, articleid) {
+      //console.log(premiumcount, articleuserid)
+      //$("rating").click(function (e) {
+      //e.preventDefault();
+
+
+      $(document).ready(function () {
+        var count = 0;
+        var articleuserid1 = articleuserid;
+        var articleid1 = articleid;
+
+        var likecount = parseInt(count) + 1;
+
+        $.ajax({
+          type: "POST",
+          url: "userdashboard/like",
+          data: {
+            likecount: likecount, // < note use of 'this' here
+            loginuserid: loginuserid,
+            articleuserid: articleuserid1,
+            articleid: articleid1
+
+            //access_token: $("#access_token").val() ......////$(this).val()
+          },
+          dataType: 'json',
+          success: function (result) {
+            console.log(result)
+            if(result.status == false){
+              window.alert("You are not a premium user")
+            }
+            //alert('ok');
+          },
+          error: function (result) {
+            console.log(result)
+            alert('error');
+          }
+        })
+      })
+    }//);
+
+
+  </script>
+
+
+
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+
+
+
+
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"
+    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js"
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+    crossorigin="anonymous"></script>
+
+</body>
